@@ -58,8 +58,7 @@ class Model():
                                   partial_gp_loss], loss_weights=[-1.0, 1.0, 1.0])
 
 
-
-        self.colorizationModel.trainable = True
+        self.generator.trainable = True
         self.discriminator.trainable = False
         self.combined = Model(inputs=[img_l_3, img_l],
                               outputs=[ predAB, classVector, discPredAB])
