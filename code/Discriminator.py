@@ -1,9 +1,9 @@
 import tensorflow as tf
 import numpy as np
 
-class discriminator(tf.keras.Model):
+class Discriminator(tf.keras.Model):
     def __init__(self):
-        super(discriminator, self).__init__()
+        super(Discriminator, self).__init__()
         self.conv1 = tf.nn.Conv2d(3, 64, filters=(4,4),stride=(2,2), padding=1) # 64, 112, 112
         self.conv2 = tf.nn.Conv2d(64, 128, filters=(4,4),stride=(2,2), padding=1) # 128, 56, 56
         self.conv3 = tf.nn.Conv2d(128,256, filters=(4,4),stride=(2,2), padding=1) # 256, 28, 28, 2
