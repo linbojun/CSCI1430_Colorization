@@ -1,8 +1,8 @@
 import os
-from . import Utils
+import Utils
 import datetime
 import dataclasses
-from .Model import Model
+import Model
 
 if __name__ == '__main__':
     
