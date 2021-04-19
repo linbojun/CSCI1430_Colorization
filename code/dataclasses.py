@@ -1,23 +1,23 @@
 import numpy as np
 import cv2
 import os
-import config as config
+import Utils 
 
 
 class DATA():
 
     def __init__(self, dirname):
-        self.dir_path = os.path.join(config.DATA_DIR, dirname)
+        self.dir_path = os.path.join(Utils.DATA_DIR, dirname)
         self.filelist = os.listdir(self.dir_path)
-        self.batch_size = config.BATCH_SIZE
+        self.batch_size = Utils.BATCH_SIZE
         self.size = len(self.filelist)
         self.data_index = 0
 
     def read_img(self, filename):
         img = cv2.imread(filename, 3)
-        labimg = cv2.cvtColor(cv2.resize(img, (config.IMAGE_SIZE, config.IMAGE_SIZE)), cv2.COLOR_BGR2Lab)
+        labimg = cv2.cvtColor(cv2.resize(img, (Utils.IMAGE_SIZE, Utils.IMAGE_SIZE)), cv2.COLOR_BGR2Lab)
         labimg_ori = cv2.cvtColor(img, cv2.COLOR_BGR2Lab)
-        return np.reshape(labimg[:,:,0], (config.IMAGE_SIZE, config.IMAGE_SIZE, 1)), labimg[:, :, 1:], img, labimg_ori[:,:,0]
+        return np.reshape(labimg[:,:,0], (Utils.IMAGE_SIZE, Utils.IMAGE_SIZE, 1)), labimg[:, :, 1:], img, labimg_ori[:,:,0]
 
 
 

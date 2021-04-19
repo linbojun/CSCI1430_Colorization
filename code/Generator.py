@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
-from .Utils import IMAGE_SIZE
+import Utils
+from Utils import IMAGE_SIZE
 
 class Generator(tf.keras.Model):
     def __init__(self):

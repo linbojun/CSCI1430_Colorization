@@ -1,10 +1,10 @@
 import tensorflow as tf
 import numpy as np
 import keras.layers as Layers
-from .Generator import Generator
-from .Discriminator import Discriminator
-from .Loss import wasserstein_loss, gradient_penalty_loss, GRADIENT_PENALTY_WEIGHT
-from . import Utils
+from Generator import Generator
+from Discriminator import Discriminator
+from Loss import wasserstein_loss, gradient_penalty_loss, GRADIENT_PENALTY_WEIGHT
+import Utils
 import os
 from functools import partial
 from keras import applications
