@@ -27,42 +27,35 @@ class Model():
         self.generator.compile(loss=['mse', 'kld'],
             optimizer=self.optimizer)
 
-        self.img_l_3 = Layers.Input(shape=(Utils.IMAGE_SIZE, Utils.IMAGE_SIZE, 3))
-        self.img_l = Layers.Input(shape=(Utils.IMAGE_SIZE, Utils.IMAGE_SIZE, 1))
-        self.img_ab = Layers.Input(shape=(Utils.IMAGE_SIZE, Utils.IMAGE_SIZE, 2))
+        img_l_3 = Layers.Input(shape=(Utils.IMAGE_SIZE, Utils.IMAGE_SIZE, 3))
+        img_l = Layers.Input(shape=(Utils.IMAGE_SIZE, Utils.IMAGE_SIZE, 1))
+        img_ab = Layers.Input(shape=(Utils.IMAGE_SIZE, Utils.IMAGE_SIZE, 2))
 
         self.generator.trainable = False
-        predAB, classVector = self.generator(self.img_l_3)
-        discPredAB = self.discriminator([predAB, self.img_l])
-        discriminator_output_from_real_sample = self.discriminator([self.img_ab, self.img_l])
-
-        averaged_samples = RandomWeightedAverage()([self.img_ab,
-                                            predAB])
-        averaged_samples_out = self.discriminator([averaged_samples, self.img_l])
+        predAB, classVector = self.generator(img_l_3)
+        discPredAB = self.discriminator([predAB, img_l])
+        discriminator_output_from_real_sample = self.discriminator([img_ab, img_l])
+        
+        averaged_samples = RandomWeightedAverage()._merge_function([img_ab, predAB])
+        averaged_samples_out = self.discriminator([averaged_samples, img_l])
         partial_gp_loss = partial(gradient_penalty_loss,
                           averaged_samples=averaged_samples,
                           gradient_penalty_weight=GRADIENT_PENALTY_WEIGHT)
         partial_gp_loss.__name__ = 'gradient_penalty'
 
 
-        self.discriminator_model = Model(inputs=[self.img_l, self.img_ab, self.img_l_3],
-                            outputs=[discriminator_output_from_real_sample,
-                                     discPredAB,
-                                     averaged_samples_out])
+        self.discriminator_model = tf.keras.models.Model(inputs=[img_l, img_ab, img_l_3],
+                            outputs=[discriminator_output_from_real_sample, discPredAB, averaged_samples_out])
 
-        self.discriminator_model.compile(optimizer=optimizer,
-                            loss=[wasserstein_loss,
-                                  wasserstein_loss,
-                                  partial_gp_loss], loss_weights=[-1.0, 1.0, 1.0])
+        self.discriminator_model.compile(optimizer=self.optimizer,
+                            loss=[wasserstein_loss, wasserstein_loss, partial_gp_loss], loss_weights=[-1.0, 1.0, 1.0])
 
 
         self.generator.trainable = True
         self.discriminator.trainable = False
-        self.combined = Model(inputs=[img_l_3, img_l],
+        self.combined = tf.keras.models.Model(inputs=[img_l_3, img_l],
                               outputs=[ predAB, classVector, discPredAB])
-        self.combined.compile(loss=['mse','kld', wasserstein_loss],
-                            loss_weights=[1.0, 0.003, -0.1],
-                            optimizer=optimizer) #1/300
+        self.combined.compile(loss=['mse','kld', wasserstein_loss], loss_weights=[1.0, 0.003, -0.1], optimizer=self.optimizer) #1/300
 
 
         self.log_path= os.path.join(Utils.LOG_DIR,Utils.TEST_NAME)
@@ -109,12 +102,11 @@ class Model():
                 save_path = os.path.join(save_models_path, "my_model_combinedEpoch%d.h5" % epoch)
                 self.combined.save(save_path)
                 save_path = os.path.join(save_models_path, "my_model_colorizationEpoch%d.h5" % epoch)
-                self.colorizationModel.save(save_path)
+                self.generator.save(save_path)
                 save_path = os.path.join(save_models_path, "my_model_discriminatorEpoch%d.h5" % epoch)
                 self.discriminator.save(save_path)
 
-                # sample images after each epoch
-                self.sample_images(test_data,epoch)
+
        
     def write_log(self, callback, names, logs, batch_no):
         for name, value in zip(names, logs):
@@ -126,7 +118,7 @@ class Model():
             callback.writer.flush()
 
 
-class RandomWeightedAverage(_Merge):
+class RandomWeightedAverage():
 
     def _merge_function(self, inputs):
         weights = backend.random_uniform((Utils.BATCH_SIZE, 1, 1, 1))

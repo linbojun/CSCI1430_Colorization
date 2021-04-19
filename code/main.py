@@ -2,7 +2,7 @@ import os
 import Utils
 import datetime
 import dataclasses
-import Model
+from Model import Model
 
 if __name__ == '__main__':
     

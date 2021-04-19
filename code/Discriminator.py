@@ -5,12 +5,12 @@ from Utils import IMAGE_SIZE
 class Discriminator(tf.keras.Model):
     def __init__(self):
         super(Discriminator, self).__init__()
-        self.conv1 = tf.nn.Conv2d(3, 64, filters=(4,4), stride=(2, 2), padding="SAME") # 64, 112, 112
-        self.conv2 = tf.nn.Conv2d(64, 128, filters=(4,4), stride=(2, 2), padding="SAME") # 128, 56, 56
-        self.conv3 = tf.nn.Conv2d(128, 256, filters=(4,4), stride=(2, 2), padding="SAME") # 256, 28, 28, 2
-        self.conv4 = tf.nn.Conv2d(256, 512, filters=(4,4), stride=(1, 1), padding="SAME")# 512, 28, 28
-        self.conv5 = tf.nn.Conv2d(512, 1, filters=(4,4), stride=(1, 1), padding="SAME") # 1, 
-        self.relu = tf.nn.LeakyReLU(0.3)
+        self.conv1 = tf.keras.layers.Conv2D(64, (4,4), strides=(2, 2), padding="SAME") # 64, 112, 112
+        self.conv2 = tf.keras.layers.Conv2D(128, (4,4), strides=(2, 2), padding="SAME") # 128, 56, 56
+        self.conv3 = tf.keras.layers.Conv2D(256, (4,4), strides=(2, 2), padding="SAME") # 256, 28, 28, 2
+        self.conv4 = tf.keras.layers.Conv2D(512, (4,4), strides=(1, 1), padding="SAME")# 512, 28, 28
+        self.conv5 = tf.keras.layers.Conv2D(1, (4,4), strides=(1, 1), padding="SAME") # 1, 
+        self.relu = tf.keras.layers.LeakyReLU(0.3)
 
     def get_model(self):
         input_ab = tf.keras.Input(shape=(IMAGE_SIZE, IMAGE_SIZE, 2), name='ab_input')
@@ -28,3 +28,4 @@ class Discriminator(tf.keras.Model):
         token = self.relu(token)                 #[-1, 512, 27, 27]
         token = self.conv5(token)                #[-1, 1, 26, 26]
         return tf.keras.Model([input_ab, input_l], token)
+

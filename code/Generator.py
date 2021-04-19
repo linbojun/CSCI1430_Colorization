@@ -7,7 +7,7 @@ class Generator(tf.keras.Model):
     def __init__(self):
         super(Generator, self).__init__()
 
-        self.VGG = tf.applications.vgg16.VGG16(weights='imagenet', include_top=False, input_shape=(IMAGE_SIZE, IMAGE_SIZE, 3))
+        self.VGG = tf.keras.applications.vgg16.VGG16(weights='imagenet', include_top=False, input_shape=(IMAGE_SIZE, IMAGE_SIZE, 3))
         #self.VGG = tf.keras.models.Model(VGG_model.input, VGG_model.layers[-6].output)
         # Global Features
 
@@ -34,6 +34,7 @@ class Generator(tf.keras.Model):
 
         self.mid_conv1 = tf.keras.layers.Conv2D(512, (3, 3),  padding='same', strides=(1, 1), activation='relu')
         self.mid_conv2 = tf.keras.layers.Conv2D(256, (3, 3),  padding='same', strides=(1, 1), activation='relu')
+        self.batchnorm2 = tf.keras.layers.BatchNormalization()
 
         # fusion of (VGG16 + Midlevel) + (VGG16 + Global)
         self.fusion = tf.keras.layers.concatenate
@@ -81,8 +82,8 @@ class Generator(tf.keras.Model):
         #mid feature
         mid_feat = self.mid_conv1(vgg_res)
         mid_feat = self.batchnorm(mid_feat)
-        mid_feat = self.mid_conv2(vgg_res)
-        mid_feat = self.batchnorm(mid_feat)
+        mid_feat = self.mid_conv2(mid_feat)
+        mid_feat = self.batchnorm2(mid_feat)
 
         #fusion
         fusion_feat =  self.fusion([mid_feat, global_feat2])
@@ -100,4 +101,4 @@ class Generator(tf.keras.Model):
         out = self.out_conv6(out)
 
         out = self.out_up_sample(out)
-        return tf.keras.Model(input=inputs, outputs = [out, global_featClass])
+        return tf.keras.Model(inputs=inputs, outputs = [out, global_featClass])
