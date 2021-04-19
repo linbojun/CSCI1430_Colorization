@@ -14,7 +14,7 @@ class DATA():
         self.data_index = 0
 
     def read_img(self, filename):
-        img = cv2.imread(filename, 3)
+        img = cv2.imread(filename, cv2.IMREAD_UNCHANGED)
         labimg = cv2.cvtColor(cv2.resize(img, (Utils.IMAGE_SIZE, Utils.IMAGE_SIZE)), cv2.COLOR_BGR2Lab)
         labimg_ori = cv2.cvtColor(img, cv2.COLOR_BGR2Lab)
         return np.reshape(labimg[:,:,0], (Utils.IMAGE_SIZE, Utils.IMAGE_SIZE, 1)), labimg[:, :, 1:], img, labimg_ori[:,:,0]

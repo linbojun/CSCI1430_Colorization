@@ -21,7 +21,7 @@ def wasserstein_loss(y_true, y_pred):
     outputs by the labels will give you the loss immediately.
     Note that the nature of this loss means that it can be (and frequently will be)
     less than 0."""
-    return tf.keras.backend.mean(y_true * y_pred)
+    return tf.keras.backend.mean(y_pred)
 
 
 def gradient_penalty_loss(y_true, y_pred, averaged_samples,
