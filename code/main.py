@@ -26,4 +26,4 @@ if __name__ == '__main__':
 
         print("Start training")
         colorizationModel.train(train_data,test_data, log)
-        colorizationModel.save_weights('./checkpoints/my_colorization_checkpoints')
+        #colorizationModel.save_weights('./checkpoints/my_colorization_checkpoints')

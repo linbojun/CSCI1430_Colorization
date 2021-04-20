@@ -10,6 +10,8 @@ from functools import partial
 from keras import applications
 from keras.callbacks import TensorBoard
 from keras import backend
+from tensorflow.python.framework.ops import disable_eager_execution
+disable_eager_execution()
 
 learning_rate = 0.00002
 
@@ -93,8 +95,8 @@ class Model():
                                                         [trainAB, predictVGG, positive_y])
                     d_loss = self.discriminator_model.train_on_batch([trainL, trainAB, l_3], [positive_y, negative_y, dummy_y])
 
-                    write_log(self.callback, self.train_names, g_loss, (epoch*total_batch+batch+1))
-                    write_log(self.callback, self.disc_names, d_loss, (epoch*total_batch+batch+1))
+                    #self.write_log(self.callback, self.train_names, g_loss, (epoch*total_batch+batch+1))
+                    #self.write_log(self.callback, self.disc_names, d_loss, (epoch*total_batch+batch+1))
 
                     if (batch)%1000 ==0:
                         print("[Epoch %d] [Batch %d/%d] [generator loss: %08f] [discriminator loss: %08f]" %  ( epoch, batch,total_batch, g_loss[0], d_loss[0]))
@@ -106,8 +108,6 @@ class Model():
                 save_path = os.path.join(save_models_path, "my_model_discriminatorEpoch%d.h5" % epoch)
                 self.discriminator.save(save_path)
 
-
-       
     def write_log(self, callback, names, logs, batch_no):
         for name, value in zip(names, logs):
             summary = tf.Summary()
