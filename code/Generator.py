@@ -86,7 +86,7 @@ class Generator(tf.keras.Model):
         mid_feat = self.batchnorm2(mid_feat)
 
         #fusion
-        fusion_feat =  self.fusion([mid_feat, global_feat2])
+        fusion_feat =  self.fusion([mid_feat, global_feat2], axis=-1)
 
         #output
         out = self.out_conv1(fusion_feat)
