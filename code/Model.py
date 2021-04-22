@@ -102,11 +102,14 @@ class Model():
                         print("[Epoch %d] [Batch %d/%d] [generator loss: %08f] [discriminator loss: %08f]" %  ( epoch, batch,total_batch, g_loss[0], d_loss[0]))
 
                 save_path = os.path.join(save_models_path, "my_model_combinedEpoch%d.h5" % epoch)
-                self.combined.save(save_path)
+                #self.combined.save(save_path)
+                tf.keras.models.save_model(self.combined, save_path)
                 save_path = os.path.join(save_models_path, "my_model_colorizationEpoch%d.h5" % epoch)
-                self.generator.save(save_path)
+                #self.generator.save(save_path)
+                tf.keras.models.save_model(self.generator, save_path)
                 save_path = os.path.join(save_models_path, "my_model_discriminatorEpoch%d.h5" % epoch)
-                self.discriminator.save(save_path)
+                #self.discriminator.save(save_path)
+                tf.keras.models.save_model(self.discriminator, save_path)
 
     def write_log(self, callback, names, logs, batch_no):
         for name, value in zip(names, logs):
