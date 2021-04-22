@@ -17,5 +17,5 @@ IMAGE_SIZE = 224
 BATCH_SIZE = 10
 
 # TRAIN
-PRETRAINED = "modelPretrained.h5" # UPDATE
+PRETRAINED = "my_model_colorizationEpoch4.h5" # UPDATE
 NUM_EPOCHS = 5

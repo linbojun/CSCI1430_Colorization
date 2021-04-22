@@ -85,14 +85,6 @@ class Model():
         total_batch = int(data.size/Utils.BATCH_SIZE)
 
         for epoch in range(Utils.NUM_EPOCHS):
-            #save_path = os.path.join(save_models_path, "my_model_combinedEpoch%d.h5" % epoch)
-            #self.combined.save(save_path)
-            save_path = os.path.join(save_models_path, "my_model_colorizationEpoch%d.h5" % epoch)
-            #self.generator.save(save_path)
-            self.generator.save_weights(save_path)
-            #save_path = os.path.join(save_models_path, "my_model_discriminatorEpoch%d.h5" % epoch)
-            #self.discriminator.save(save_path)
-
             for batch in range(total_batch):
                 trainL, trainAB, _, original, l_img_oritList  = data.generate_batch()
                 l_3=np.tile(trainL,[1,1,1,3])
@@ -109,12 +101,12 @@ class Model():
                 if (batch)%1000 ==0:
                     print("[Epoch %d] [Batch %d/%d] [generator loss: %08f] [discriminator loss: %08f]" %  ( epoch, batch,total_batch, g_loss[0], d_loss[0]))
 
-            #save_path = os.path.join(save_models_path, "my_model_combinedEpoch%d.h5" % epoch)
-            #self.combined.save(save_path)
-            #save_path = os.path.join(save_models_path, "my_model_colorizationEpoch%d.h5" % epoch)
-            #self.generator.save(save_path)
-            #save_path = os.path.join(save_models_path, "my_model_discriminatorEpoch%d.h5" % epoch)
-            #self.discriminator.save(save_path)
+            save_path = os.path.join(save_models_path, "my_model_combinedEpoch%d.h5" % epoch)
+            self.combined.save_weights(save_path)
+            save_path = os.path.join(save_models_path, "my_model_colorizationEpoch%d.h5" % epoch)
+            self.generator.save_weights(save_path)
+            save_path = os.path.join(save_models_path, "my_model_discriminatorEpoch%d.h5" % epoch)
+            self.discriminator.save_weights(save_path)
 
     def write_log(self, callback, names, logs, batch_no):
         for name, value in zip(names, logs):
