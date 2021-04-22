@@ -85,31 +85,36 @@ class Model():
         total_batch = int(data.size/Utils.BATCH_SIZE)
 
         for epoch in range(Utils.NUM_EPOCHS):
-                for batch in range(total_batch):
-                    trainL, trainAB, _, original, l_img_oritList  = data.generate_batch()
-                    l_3=np.tile(trainL,[1,1,1,3])
+            #save_path = os.path.join(save_models_path, "my_model_combinedEpoch%d.h5" % epoch)
+            #self.combined.save(save_path)
+            save_path = os.path.join(save_models_path, "my_model_colorizationEpoch%d.h5" % epoch)
+            #self.generator.save(save_path)
+            self.generator.save_weights(save_path)
+            #save_path = os.path.join(save_models_path, "my_model_discriminatorEpoch%d.h5" % epoch)
+            #self.discriminator.save(save_path)
 
-                    predictVGG =VGG_modelF.predict(l_3)
+            for batch in range(total_batch):
+                trainL, trainAB, _, original, l_img_oritList  = data.generate_batch()
+                l_3=np.tile(trainL,[1,1,1,3])
 
-                    g_loss =self.combined.train_on_batch([l_3, trainL],
-                                                        [trainAB, predictVGG, positive_y])
-                    d_loss = self.discriminator_model.train_on_batch([trainL, trainAB, l_3], [positive_y, negative_y, dummy_y])
+                predictVGG =VGG_modelF.predict(l_3)
 
-                    #self.write_log(self.callback, self.train_names, g_loss, (epoch*total_batch+batch+1))
-                    #self.write_log(self.callback, self.disc_names, d_loss, (epoch*total_batch+batch+1))
+                g_loss =self.combined.train_on_batch([l_3, trainL],
+                                                    [trainAB, predictVGG, positive_y])
+                d_loss = self.discriminator_model.train_on_batch([trainL, trainAB, l_3], [positive_y, negative_y, dummy_y])
 
-                    if (batch)%1000 ==0:
-                        print("[Epoch %d] [Batch %d/%d] [generator loss: %08f] [discriminator loss: %08f]" %  ( epoch, batch,total_batch, g_loss[0], d_loss[0]))
+                #self.write_log(self.callback, self.train_names, g_loss, (epoch*total_batch+batch+1))
+                #self.write_log(self.callback, self.disc_names, d_loss, (epoch*total_batch+batch+1))
 
-                save_path = os.path.join(save_models_path, "my_model_combinedEpoch%d.h5" % epoch)
-                #self.combined.save(save_path)
-                tf.keras.models.save_model(self.combined, save_path)
-                save_path = os.path.join(save_models_path, "my_model_colorizationEpoch%d.h5" % epoch)
-                #self.generator.save(save_path)
-                tf.keras.models.save_model(self.generator, save_path)
-                save_path = os.path.join(save_models_path, "my_model_discriminatorEpoch%d.h5" % epoch)
-                #self.discriminator.save(save_path)
-                tf.keras.models.save_model(self.discriminator, save_path)
+                if (batch)%1000 ==0:
+                    print("[Epoch %d] [Batch %d/%d] [generator loss: %08f] [discriminator loss: %08f]" %  ( epoch, batch,total_batch, g_loss[0], d_loss[0]))
+
+            #save_path = os.path.join(save_models_path, "my_model_combinedEpoch%d.h5" % epoch)
+            #self.combined.save(save_path)
+            #save_path = os.path.join(save_models_path, "my_model_colorizationEpoch%d.h5" % epoch)
+            #self.generator.save(save_path)
+            #save_path = os.path.join(save_models_path, "my_model_discriminatorEpoch%d.h5" % epoch)
+            #self.discriminator.save(save_path)
 
     def write_log(self, callback, names, logs, batch_no):
         for name, value in zip(names, logs):
