@@ -3,6 +3,7 @@ import cv2
 import os
 import imageio
 from tensorflow import keras
+
 import Utils
 
 class DATA():
@@ -38,8 +39,7 @@ class DATA():
         print ("data done !")
     
     def generate_result(self):
-        #self.generator = keras.models.load_model('../my_model_colorizationEpoch4.h5')
-        self.combined = keras.models.load_model('../my_model_combinedEpoch4.h5')
+        self.generator = keras.models.load_model('../my_model_colorizationEpoch2.h5')
 
         #res = self.generator.predict(self.input_images_3)
         #print (res.shape)
