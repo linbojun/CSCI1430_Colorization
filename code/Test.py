@@ -27,6 +27,7 @@ class Test():
 
         gen = Generator()
         colorization_model = gen.get_model()
+        colorization_model.summary()
         colorization_model.load_weights(save_path)
         #colorization_model = load_model(save_path)
         colorization_model.compile(loss=['mse', 'kld'],
