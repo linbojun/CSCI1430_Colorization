@@ -1,7 +1,7 @@
 import os
 
 # DIRECTORY INFORMATION
-DATASET = "cifar" # UPDATE
+DATASET = "imagenet" # UPDATE
 TEST_NAME ="FirstTest"
 ROOT_DIR = os.path.abspath('../')
 DATA_DIR = os.path.join(ROOT_DIR, 'DATASET/'+DATASET+'/')
