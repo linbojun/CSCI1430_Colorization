@@ -1,4 +1,4 @@
-# CSCI1430_Colorization
+# CSCI1430 ChromaGAN: Colorization of Images
 
 For our final project, we implemented colorization based on *ChromaGAN: Adversarial Picture Colorization with Semantic Class Distribution* by Patricia Vitoria, Lara Raad, and Coloma Ballester.
 
